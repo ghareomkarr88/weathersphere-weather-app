@@ -1,0 +1,298 @@
+<!--
+  Project: Weather Application
+  Author: Omkar R. Ghare
+  Designation: Front-End Web Developer
+  Email: ghareomkarr88@gmail.com
+  GitHub: https://github.com/ghareomkarr88
+  Created: August 2026
+  Last Updated: September 2026
+
+  © 2026 Omkar R. Ghare. All rights reserved.
+
+  This project and its source code are licensed under the MIT License.
+  See the LICENSE file in the root directory for full details.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Premium 3D Animated Weather Application - Get real-time weather forecasts, current conditions, and 7-day predictions for any city worldwide.">
+<meta name="keywords" content="weather, forecast, temperature, humidity, wind, UV index, sunrise, sunset">
+<meta name="author" content="Omkar R. Ghare">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="WeatherSphere - Premium Weather App">
+<meta property="og:description" content="Beautiful 3D animated weather application with real-time data">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#667eea">
+<title>WeatherSphere | Premium 3D Weather Application</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ==================== PRELOADER ==================== -->
+<div id="preloader">
+  <div class="preloader-content">
+    <div class="preloader-logo">
+      <div class="preloader-sphere"></div>
+    </div>
+    <div class="preloader-text">WeatherSphere</div>
+    <div class="preloader-subtext">Loading Experience</div>
+    <div class="preloader-progress">
+      <div class="preloader-progress-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ANIMATED BACKGROUND ==================== -->
+<div class="weather-bg clear" id="weatherBg"></div>
+<div class="weather-particles" id="weatherParticles"></div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div class="app-container">
+
+  <!-- HEADER -->
+  <header class="app-header" role="banner">
+    <a href="#" class="logo" aria-label="WeatherSphere Home">
+      <div class="logo-icon">⛅</div>
+      <span class="logo-text">WeatherSphere</span>
+    </a>
+    <div class="header-controls">
+      <button class="unit-toggle" id="unitToggle" aria-label="Toggle temperature unit" title="Toggle °C / °F">°C</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+        <div class="theme-toggle-circle" id="themeCircle">☀️</div>
+      </button>
+    </div>
+  </header>
+
+  <!-- SEARCH SECTION -->
+  <section class="search-section" aria-label="Search for a city">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput" 
+          placeholder="Search city... (e.g., London, Tokyo, New York)" 
+          autocomplete="off"
+          aria-label="City search"
+        >
+        <div class="autocomplete-list" id="autocompleteList"></div>
+      </div>
+      <button class="search-btn" id="searchBtn" aria-label="Search">
+        <span>Search</span>
+      </button>
+      <button class="location-btn" id="locationBtn" aria-label="Use current location" title="Use my location">
+        <span>📍</span>
+        <span class="location-btn-text">My Location</span>
+      </button>
+    </div>
+    
+    <!-- Search History -->
+    <div class="search-history" id="searchHistory"></div>
+  </section>
+
+  <!-- LOADING SKELETON -->
+  <div class="skeleton-container" id="skeletonLoader">
+    <div class="skeleton skeleton-main"></div>
+    <div class="skeleton-grid">
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+    <div class="skeleton skeleton-forecast"></div>
+  </div>
+
+  <!-- ERROR CONTAINER -->
+  <div class="error-container" id="errorContainer">
+    <span class="error-icon" id="errorIcon">🏙️</span>
+    <h2 class="error-title" id="errorTitle">City Not Found</h2>
+    <p class="error-message" id="errorMessage">We couldn't find weather data for that location. Please check the spelling and try again.</p>
+    <button class="error-retry" id="errorRetry">Try Again</button>
+  </div>
+
+  <!-- WELCOME SECTION -->
+  <section class="welcome-section" id="welcomeSection">
+    <span class="welcome-icon">🌍</span>
+    <h1 class="welcome-title">Welcome to WeatherSphere</h1>
+    <p class="welcome-text">Get real-time weather information for any city in the world. Search for a city or use your current location to get started.</p>
+    <div class="welcome-features">
+      <div class="welcome-feature">
+        <span class="welcome-feature-icon">🌡️</span>
+        <span class="welcome-feature-text">Real-time Data</span>
+      </div>
+      <div class="welcome-feature">
+        <span class="welcome-feature-icon">📅</span>
+        <span class="welcome-feature-text">7-Day Forecast</span>
+      </div>
+      <div class="welcome-feature">
+        <span class="welcome-feature-icon">📍</span>
+        <span class="welcome-feature-text">Geolocation</span>
+      </div>
+      <div class="welcome-feature">
+        <span class="welcome-feature-icon">🎨</span>
+        <span class="welcome-feature-text">Dynamic Themes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEATHER CONTENT -->
+  <main class="weather-content" id="weatherContent">
+    
+    <!-- Main Weather Card -->
+    <article class="main-weather-card fade-in" id="mainWeatherCard">
+      <div class="main-weather-grid">
+        <div class="weather-location">
+          <h1 class="city-name" id="cityName">--</h1>
+          <span class="country-name" id="countryName">📍 --</span>
+          <span class="weather-date" id="weatherDate">--</span>
+        </div>
+        
+        <div class="weather-temp-section">
+          <span class="weather-icon-3d" id="weatherIcon">🌤️</span>
+          <div class="temperature-display" id="tempDisplay">--°</div>
+          <p class="weather-description" id="weatherDesc">--</p>
+          <p class="feels-like" id="feelsLike">Feels like --°</p>
+        </div>
+        
+        <div class="weather-extra">
+          <div class="extra-item">
+            <span class="extra-icon">💧</span>
+            <div class="extra-info">
+              <span class="extra-label">Humidity</span>
+              <span class="extra-value" id="humidity">--%</span>
+            </div>
+          </div>
+          <div class="extra-item">
+            <span class="extra-icon">💨</span>
+            <div class="extra-info">
+              <span class="extra-label">Wind</span>
+              <span class="extra-value" id="windSpeed">-- m/s</span>
+            </div>
+          </div>
+          <div class="extra-item">
+            <span class="extra-icon">👁️</span>
+            <div class="extra-info">
+              <span class="extra-label">Visibility</span>
+              <span class="extra-value" id="visibility">-- km</span>
+            </div>
+          </div>
+          <div class="extra-item">
+            <span class="extra-icon">🌡️</span>
+            <div class="extra-info">
+              <span class="extra-label">Pressure</span>
+              <span class="extra-value" id="pressure">-- hPa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Detail Cards -->
+    <div class="detail-grid fade-in fade-in-delay-1" id="detailGrid">
+      <div class="detail-card">
+        <span class="detail-card-icon">🌡️</span>
+        <div class="detail-card-value" id="tempMax">--°</div>
+        <div class="detail-card-label">High</div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-card-icon">🥶</span>
+        <div class="detail-card-value" id="tempMin">--°</div>
+        <div class="detail-card-label">Low</div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-card-icon">☀️</span>
+        <div class="detail-card-value" id="uvIndex">--</div>
+        <div class="detail-card-label">UV Index</div>
+        <div class="detail-card-sub" id="uvLevel">--</div>
+        <div class="uv-bar"><div class="uv-indicator" id="uvIndicator"></div></div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-card-icon">🌬️</span>
+        <div class="detail-card-value" id="windGust">-- m/s</div>
+        <div class="detail-card-label">Wind Gust</div>
+        <div class="detail-card-sub" id="windDir">--</div>
+        <div class="wind-compass">
+          <div class="wind-arrow" id="windArrow"></div>
+        </div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-card-icon">🌧️</span>
+        <div class="detail-card-value" id="rainChance">--%</div>
+        <div class="detail-card-label">Rain</div>
+      </div>
+      <div class="detail-card">
+        <span class="detail-card-icon">☁️</span>
+        <div class="detail-card-value" id="clouds">--%</div>
+        <div class="detail-card-label">Cloudiness</div>
+      </div>
+    </div>
+
+    <!-- Sunrise/Sunset -->
+    <div class="sun-card fade-in fade-in-delay-2">
+      <div class="sun-card-title">🌅 Sunrise & Sunset</div>
+      <div class="sun-times">
+        <div class="sun-time-item">
+          <span class="sun-time-icon">🌅</span>
+          <div class="sun-time-value" id="sunrise">--:--</div>
+          <div class="sun-time-label">Sunrise</div>
+        </div>
+        <div class="sun-arc">
+          <div class="sun-arc-line"></div>
+          <div class="sun-position" id="sunPosition">☀️</div>
+        </div>
+        <div class="sun-time-item">
+          <span class="sun-time-icon">🌇</span>
+          <div class="sun-time-value" id="sunset">--:--</div>
+          <div class="sun-time-label">Sunset</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hourly Forecast -->
+    <section class="hourly-section fade-in fade-in-delay-3" aria-label="Hourly forecast">
+      <div class="section-header">
+        <h2 class="section-title">⏰ Hourly Forecast</h2>
+      </div>
+      <div class="hourly-scroll" id="hourlyScroll"></div>
+    </section>
+
+    <!-- 5/7 Day Forecast -->
+    <section class="forecast-section fade-in fade-in-delay-4" aria-label="Extended forecast">
+      <div class="section-header">
+        <h2 class="section-title">📅 Extended Forecast</h2>
+        <div class="forecast-toggle-group">
+          <button class="forecast-toggle-btn active" data-days="5">5 Days</button>
+          <button class="forecast-toggle-btn" data-days="7">7 Days</button>
+        </div>
+      </div>
+      <div class="forecast-grid" id="forecastGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <p>© 2026 Omkar R. Ghare. All rights reserved. Built with ❤️ by WeatherSphere | Data from <a href="https://openweathermap.org" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a></p>
+  </footer>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span class="toast-message" id="toastMessage">Success!</span>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
