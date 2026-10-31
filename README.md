@@ -12,7 +12,7 @@ A modern, interactive weather application built using **HTML5, CSS3, and JavaScr
 
 ## 🌐 Live Demo
 
-**Live Preview:** Add your deployed website URL here.
+**Live Preview:** https://ghareomkarr88.github.io/weathersphere-weather-app/
 
 <!-- Replace the placeholder above with your GitHub Pages URL after deployment. -->
 
